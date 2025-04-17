@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/Navbar/navbar";
 import { useState } from "react";
 import './mainLayout.css'
 
