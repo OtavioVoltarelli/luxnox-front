@@ -1,4 +1,4 @@
-import TransferListSimilarProducts from '../../components/TransferList/TransferListSimilarProducts';
+import TransferListSimilarProducts from '../../components/TransferList/transferListSimilarProducts';
 
 function SimilarProducts() {
     return (
