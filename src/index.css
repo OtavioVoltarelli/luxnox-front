@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Bebas Neue', sans-serif;
+  line-height: 1.5;
+  
+}
+
+:root {
+  --cinza-claro: #c8c8c8;
+  --vermelho: #ff0d00; 
+  --laranja: #CB1E00; 
+  --cinza: #202020;         
+  --fundo: #f2f2f2;        
+  --texto-input: #424242;
+}
+
+input {
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  letter-spacing: 1.5px;
+  outline: none;
+  color: var(--texto-input);
+  border: 1px solid grey;
+}
+
+input::placeholder {
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+  padding: 6px;
+  border-radius: 7px;
+}
+
+select {
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  letter-spacing: 1.4px;
+  outline: none;
+  color: var(--texto-input);
+  border: 1px solid grey;
+}
+button:hover {
+  cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 2.6rem; 
+}
+
+h2 {
+  font-size: 2.1rem; 
+}
+
+h3 {
+  font-size: 1.85rem; 
+}
+
+h4 {
+  font-size: 1.6rem; 
+}
+
+h5 {
+  font-size: 1.35rem; 
+}
+
+h6 {
+  font-size: 1.1rem; 
+}
+
+
+body {
+  letter-spacing: 1.5px;
+  font-size: 1.1em;
+}
+
