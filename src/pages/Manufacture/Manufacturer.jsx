@@ -1,4 +1,4 @@
-import './manufacturer.css';
+import './Manufacturer.css';
 import axios from 'axios';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
