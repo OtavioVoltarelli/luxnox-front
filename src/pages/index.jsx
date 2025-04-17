@@ -1,6 +1,6 @@
 import Login from "./Login/login";
 import Navbar from "../components/Navbar/navbar";
-import Home from "./home/home";
+import Home from "./Home/home";
 import Firm from "./Firm/firm";
 import ProductGroup from "./ProductGroup/productGroup";
 import ProductLine from "./ProductLine/productLine";
