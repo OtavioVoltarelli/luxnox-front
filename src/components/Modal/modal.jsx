@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./Modal.css"; // Importando os estilos do Modal
+import "./modal.css"; // Importando os estilos do Modal
 
 const Modal = ({ message, isVisible, onClose }) => {
     // Fechar automaticamente o modal após 3 segundos
