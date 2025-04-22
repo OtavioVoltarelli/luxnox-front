@@ -279,7 +279,7 @@ const Product = () => {
                             <Select
                                 id="product"
                                 options={products ? products.map(pg => ({ value: pg.id, label: pg.name })) : []}
-                                value={selectedProduct ? { value: selectedProduct.id, label: selectedProduct.name } : null}
+                                value={selectedProduct ? { value: selectedProduct.id, label: `${selectedProduct.code} - ${selectedProduct.name}` } : null}
                                 styles={customStyles}
                                 onChange={(selected) => setSelectedProduct(products.find(pg => pg.id === selected.value))}
                                 isSearchable
