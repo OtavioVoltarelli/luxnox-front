@@ -278,7 +278,7 @@ const Product = () => {
                             <label htmlFor="name-search">Nome: </label>
                             <Select
                                 id="product"
-                                options={products ? products.map(pg => ({ value: pg.id, label: pg.name })) : []}
+                                options={products ? products.map(pg => ({ value: pg.id, label: `${pg.code} - ${pg.name}` })) : []}
                                 value={selectedProduct ? { value: selectedProduct.id, label: `${selectedProduct.code} - ${selectedProduct.name}` } : null}
                                 styles={customStyles}
                                 onChange={(selected) => setSelectedProduct(products.find(pg => pg.id === selected.value))}
