@@ -16,6 +16,7 @@ function AppRoutes() {
                 <Route path="/produtos/fabricantes" element={ <MainLayout> <Pages.Manufacturer /> </MainLayout> } />
                 <Route path="/produtos" element={ <MainLayout> <Pages.Product /> </MainLayout> } />
                 <Route path="/veiculos" element={ <MainLayout> <Pages.Vehicle /> </MainLayout> } />
+                <Route path="/veiculos/bases" element={ <MainLayout> <Pages.BaseVehicle /> </MainLayout> } />
                 <Route path="/veiculos/montadoras" element={ <MainLayout> <Pages.Automaker /> </MainLayout> } />
                 <Route path="/veiculos/motores" element={ <MainLayout> <Pages.Engine /> </MainLayout> } />
                 <Route path="/associacao/produtos-veiculos" element={ <MainLayout> <Pages.ProductVehicle /> </MainLayout> } />

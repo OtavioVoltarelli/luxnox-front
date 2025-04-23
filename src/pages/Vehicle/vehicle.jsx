@@ -6,7 +6,7 @@ import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useVehicleData } from '../../hooks/useVehicleData';
 import { useVehicleMutate } from '../../hooks/useVehicleMutate';
-import { useAutomakerData } from '../../hooks/useAutomakerData';
+import { useBaseVehicleData } from '../../hooks/useBaseVehicleData';
 import { useEngineData } from '../../hooks/useEngineData';
 
 
@@ -21,10 +21,12 @@ const Vehicle = () => {
     const [modalMessage, setModalMessage] = useState(""); // mensagem modal
     const [modalVisible, setModalVisible] = useState(false); // controle visibilidade modal
     const [selectedVehicle, setSelectedVehicle] = useState(null); // Inicializado como null
-    const [selectedAutomaker, setSelectedAutomaker] = useState(null);
+    const [selectedBaseVehicle, setSelectedBaseVehicle] = useState(null);
     const [selectedEngine, setSelectedEngine] = useState(null);
 
-    const { data: automakers, isLoading: isLoadingAutomakers } = useAutomakerData();
+    const [vehiclesByBase, setVehiclesByBase] = useState([]);
+
+    const { data: baseVehicles, isLoading: isLoadingBaseVehicles } = useBaseVehicleData();
     const { data: engines, isLoading: isLoadingEngines } = useEngineData();
     const { data: vehicles, isLoading: isLoadingVehicles } = useVehicleData();
     const { mutate, isSuccess, isError } = useVehicleMutate();
@@ -44,15 +46,34 @@ const Vehicle = () => {
             setVehicle(selectedVehicle);
         }
     }, [selectedVehicle]);
+    
+    
+    useEffect(() => {
+        if (selectedBaseVehicle) {
+            findVehicleByBaseVehicleId();
+        }
+    }, [selectedBaseVehicle]);
+
+
+    const findVehicleByBaseVehicleId = async () => {
+        try {
+            const vehiclesByBaseVehiclesId = await axios.get(`${CONFIG.API_URL}/vehicle/base/${selectedBaseVehicle.id}`)
+            setVehiclesByBase(vehiclesByBaseVehiclesId.data)
+        } catch (error) {
+            console.error("Erro:", error);
+            alert(error.response?.data || "Erro ao encontrar veículos.");
+        }
+
+    }
 
 
     const register = async () => {
-        if (Object.values(vehicle).some(value => !value.trim())) 
-            return setModalMessage("Preencha todos os campos!"), setModalVisible(true);
+        // if (Object.values(vehicle).some(value => !value.trim())) 
+        //     return setModalMessage("Preencha todos os campos!"), setModalVisible(true);
 
         const data = {
             model: vehicle.model,
-            automakerId: selectedAutomaker.id,
+            baseVehicleId: selectedBaseVehicle.id,
             yearStart: vehicle.yearStart,
             yearEnd: vehicle.yearEnd,
             engineId: selectedEngine.id,
@@ -86,7 +107,7 @@ const Vehicle = () => {
 
         const data = {
             model: vehicle.model,
-            automakerId: selectedAutomaker.id,
+            baseVehicleId: selectedBaseVehicle.id,
             yearStart: vehicle.yearStart,
             yearEnd: vehicle.yearEnd,
             engineId: selectedEngine.id,
@@ -100,7 +121,7 @@ const Vehicle = () => {
             setVehicle(""); // limpa o campo
             setModalVisible(true);
             setSelectedVehicle(null); // limpa a veículo selecionada
-            setSelectedAutomaker(null);
+            setSelectedBaseVehicle(null);
             setSelectedEngine(null);
         } catch (error) {
             console.error("Erro:", error);
@@ -151,7 +172,7 @@ const Vehicle = () => {
         }),
     };
 
-    if (isLoadingAutomakers || isLoadingEngines || isLoadingVehicles) {
+    if (isLoadingBaseVehicles || isLoadingEngines || isLoadingVehicles) {
         return <p>Carregando dados...</p>}
 
     return (
@@ -186,26 +207,26 @@ const Vehicle = () => {
                             id='model'
                             name='model'
                             type="text"
-                            placeholder="Ex: uno mile"
+                            placeholder="ex: way (opcional)"
                             value={vehicle.model}
                             onChange={handleChange}
                         />
                         <div className='select-container'>
-                            <label htmlFor="automaker">Montadora: </label>
+                            <label htmlFor="baseVehicle">Base de veículo: </label>
                             <Select 
-                            id='automaker'
-                            options={automakers ? automakers.map(a => ({
-                                value: a.id, label: a.name})) : []}
-                            value={selectedAutomaker ? {value: selectedAutomaker.id, label: selectedAutomaker.name} : null}
+                            id='baseVehicle'
+                            options={baseVehicles ? baseVehicles.map(a => ({
+                                value: a.id, label: `${a.automaker.name} ${a.name}`})) : []}
+                            value={selectedBaseVehicle ? {value: selectedBaseVehicle.id, label: `${selectedBaseVehicle.automaker.name} ${selectedBaseVehicle.name}`} : null}
                             styles={customStyles}
-                            onChange={(selected) => setSelectedAutomaker(automakers.find(a => a.id === selected.value))}
+                            onChange={(selected) => setSelectedBaseVehicle(baseVehicles.find(a => a.id === selected.value))}
                             isSearchable
-                            placeholder="Selecione uma montadora"
+                            placeholder="Selecione uma base de veículo"
                             />
 
                             <label htmlFor="engine">Motor: </label>
                             <Select 
-                            id='automaker'
+                            id='baseVehicle'
                             options={engines ? engines.map(a => ({
                                 value: a.id, label: a.name})) : []}
                             value={selectedEngine ? {value: selectedEngine.id, label: selectedEngine.name} : null}
@@ -263,20 +284,20 @@ const Vehicle = () => {
                             onChange={handleChange}
                         />
                         <div className='select-container'>
-                            <label htmlFor="automaker">Montadora: </label>
+                            <label htmlFor="baseVehicle">Base de veículo: </label>
                             <Select 
-                            id='automaker'
-                            options={automakers ? automakers.map(a => ({
-                                value: a.id, label: a.name})) : []}
-                            value={selectedAutomaker ? {value: selectedAutomaker.id, label: selectedAutomaker.name} : null}
+                            id='baseVehicle'
+                            options={baseVehicles ? baseVehicles.map(a => ({
+                                value: a.id, label: `${a.automaker.name} ${a.name}`})) : []}
+                            value={selectedBaseVehicle ? {value: selectedBaseVehicle.id, label: `${selectedBaseVehicle.automaker.name} ${selectedBaseVehicle.name}`} : null}
                             styles={customStyles}
-                            onChange={(selected) => setSelectedAutomaker(automakers.find(a => a.id === selected.value))}
+                            onChange={(selected) => setSelectedBaseVehicle(baseVehicles.find(a => a.id === selected.value))}
                             isSearchable
-                            placeholder="Selecione uma montadora"
+                            placeholder="Selecione uma base de veículo"
                             />
                             <label htmlFor="engine">Motor: </label>
                             <Select 
-                            id='automaker'
+                            id='baseVehicle'
                             options={engines ? engines.map(a => ({
                                 value: a.id, label: a.name})) : []}
                             value={selectedEngine ? {value: selectedEngine.id, label: selectedEngine.name} : null}
@@ -337,16 +358,31 @@ const Vehicle = () => {
                     <article>
                         <h4>Pesquisar veículos</h4>
                         <div className='select-container'>
-                            <label htmlFor="name-search">Modelo: </label>
+                            <label htmlFor="name-search">Base do veículo: </label>
                             <Select
                                 id="vehicle"
-                                options={vehicles ? vehicles.map(pg => ({ value: pg.id, label: pg.model })) : []}
-                                value={selectedVehicle ? { value: selectedVehicle.id, label: selectedVehicle.model } : null}
+                                options={baseVehicles ? baseVehicles.map(pg => ({ value: pg.id, label: `${pg.automaker.name} ${pg.name}` })) : []}
+                                value={selectedBaseVehicle ? { value: selectedBaseVehicle.id, label: `${selectedBaseVehicle.automaker.name} ${selectedBaseVehicle.name}` } : null}
+                                styles={customStyles}
+                                isSearchable
+                                placeholder="Selecione uma base de veículo"
+                                onChange={(selected) => {
+                                    const baseVehicle = baseVehicles.find(pg => pg.id === selected.value);
+                                    setSelectedBaseVehicle(baseVehicle)
+                                }}
+                            />
+                        </div>
+                        <div className='select-container'>
+                            <label htmlFor="name-search">Veículo completo: </label>
+                            <Select
+                                id="vehicle"
+                                options={vehiclesByBase ? vehiclesByBase.map(pg => ({ value: pg.id, label: `${pg.model} ${pg.engine.name} ${pg.valve} valvulas ${pg.yearStart} a ${pg.yearEnd}` })) : []}
+                                value={selectedVehicle ? { value: selectedVehicle.id, label: `${selectedVehicle.model} ${selectedVehicle.engine.name} ${selectedVehicle.valve} valvulas ${selectedVehicle.yearStart} a ${selectedVehicle.yearEnd}` } : null}
                                 styles={customStyles}
                                 isSearchable
                                 placeholder="Selecione um veículo"
                                 onChange={(selected) => {
-                                    const vehicle = vehicles.find(pg => pg.id === selected.value);
+                                    const vehicle = vehiclesByBase.find(pg => pg.id === selected.value);
                                     setSelectedVehicle(vehicle)
                                 }}
                             />
@@ -355,8 +391,9 @@ const Vehicle = () => {
                         {/* Exibe informações da veículo selecionada */}
                         {selectedVehicle && (
                             <section className="selected-vehicle">
-                                <h4>Detalhes da Veículo Selecionado</h4>
-                                <p><strong>Fabricante:</strong> {selectedVehicle.automaker.name}</p>
+                                <h4>Detalhes do Veículo Selecionado</h4>
+                                <p><strong>Montadora:</strong> {selectedVehicle.baseVehicle.automaker.name}</p>
+                                <p><strong>Veículo:</strong> {selectedVehicle.baseVehicle.name}</p>
                                 <p><strong>Modelo:</strong> {selectedVehicle.model}</p>
                                 <p><strong>Ano Inicial:</strong> {selectedVehicle.yearStart}</p>
                                 <p><strong>Ano Final:</strong> {selectedVehicle.yearEnd}</p>

@@ -172,7 +172,8 @@ export default function TransferListProductVehicle() {
                     />
                 </ListItemIcon>
                 <ListItemText id={labelId} primary={`
-                    ${value.automaker.name} 
+                    ${value.baseVehicle.name} 
+                    ${value.baseVehicle.automaker.name} 
                     ${value.model} 
                     ${value.engine.name} 
                     ${value.yearStart} a ${value.yearEnd}`} />

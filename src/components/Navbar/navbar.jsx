@@ -69,6 +69,7 @@ const Navbar = ({ setMenuWidth }) => {
                     </a>
                     <ul className={`submenu ${submenuOpen.veiculos ? 'show' : ''}`}>
                         <li><a href="/veiculos">Veiculos</a></li>
+                        <li><a href="/veiculos/bases">Bases de Veículos</a></li>
                         <li><a href="/veiculos/montadoras">Montadoras</a></li>
                         <li><a href="/veiculos/motores">Motores</a></li>
                     </ul>
