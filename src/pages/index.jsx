@@ -12,6 +12,7 @@ import ProductVehicle from "./ProductVehicle/productVehicle";
 import SimilarProducts from "./SimilarProducts/similarProducts"
 import Automaker from "./Automaker/automaker";
 import Engine from "./Engine/engine";
+import BaseVehicle from "./BaseVehicle/baseVehicle";
 
 export {
     Navbar,
@@ -27,5 +28,6 @@ export {
     ProductVehicle,
     SimilarProducts,
     Automaker,
-    Engine
+    Engine,
+    BaseVehicle
 };
