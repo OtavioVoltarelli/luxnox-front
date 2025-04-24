@@ -48,7 +48,7 @@ export default function TransferListSimilarProducts() {
             if (!selectedProduct) return;
             
 
-            const remainingProducts = products.filter((p => p.id !== selectedProduct.value.id))
+            const remainingProducts = products.filter((p => p.id !== selectedProduct.value))
 
             try {
                 const response = await axios.get(`${CONFIG.API_URL}/product/${selectedProduct.value}/similar-products`)
