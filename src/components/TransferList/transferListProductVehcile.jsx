@@ -10,7 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import ReactSelect from "react-select"; 
+import ReactSelect from "react-select";
 import { useProductData } from '../../hooks/useProductData';
 import { useVehicleData } from '../../hooks/useVehicleData';
 import axios from 'axios';
@@ -36,14 +36,17 @@ export default function TransferListProductVehicle() {
     const [selectedProduct, setSelectedProduct] = React.useState(null)
     const [isLoadingCompatibility, setIsLoadingCompatibility] = React.useState(true)
 
-    const { data: products, isLoading: isLoadingProducts} = useProductData();
-    const { data: vehicles, isLoading: isLoadingVehicles} = useVehicleData();
+    const { data: products, isLoading: isLoadingProducts } = useProductData();
+    const { data: vehicles, isLoading: isLoadingVehicles } = useVehicleData();
 
     const [modalMessage, setModalMessage] = React.useState("")
     const [modalVisible, setModalVisible] = React.useState(false)
 
     const nonCompatiblesVehiclesChecked = intersection(checked, nonCompatiblesVehicles);
     const compatiblesVehiclesChecked = intersection(checked, compatiblesVehicles);
+
+    const [filterCompatibles, setFilterCompatibles] = React.useState("")
+    const [filterNonCompatibles, setFilterNonCompatibles] = React.useState("")
 
     React.useEffect(() => {
         const fetchCompatibleVehicles = async () => {
@@ -64,10 +67,10 @@ export default function TransferListProductVehicle() {
     }, [selectedProduct, vehicles])
 
     const save = async () => {
-        const idsList = compatiblesVehicles.map(v => v.id );
+        const idsList = compatiblesVehicles.map(v => v.id);
 
         try {
-            await axios.put(`${CONFIG.API_URL}/product/${selectedProduct.value}/vehicles`, { 
+            await axios.put(`${CONFIG.API_URL}/product/${selectedProduct.value}/vehicles`, {
                 vehiclesIds: idsList
             })
             setModalMessage("Alterações salvas com sucesso!")
@@ -83,16 +86,14 @@ export default function TransferListProductVehicle() {
         }
     }
 
-
-
     const handleToggle = (value) => () => {
         const currentIndex = checked.findIndex((item) => item.id === value.id);
         const newChecked = [...checked];
 
         if (currentIndex === -1) {
-        newChecked.push(value);
+            newChecked.push(value);
         } else {
-        newChecked.splice(currentIndex, 1);
+            newChecked.splice(currentIndex, 1);
         }
 
         setChecked(newChecked);
@@ -102,9 +103,9 @@ export default function TransferListProductVehicle() {
 
     const handleToggleAll = (items) => () => {
         if (numberOfChecked(items) === items.length) {
-        setChecked(not(checked, items));
+            setChecked(not(checked, items));
         } else {
-        setChecked(union(checked, items));
+            setChecked(union(checked, items));
         }
     };
 
@@ -120,67 +121,92 @@ export default function TransferListProductVehicle() {
         setChecked(not(checked, compatiblesVehiclesChecked));
     };
 
-    const customList = (title, items) => (
-        <Card>
-        <CardHeader
-            sx={{ px: 2, py: 1 }}
-            avatar={
-            <Checkbox
-                onClick={handleToggleAll(items)}
-                checked={numberOfChecked(items) === items.length && items.length !== 0}
-                indeterminate={
-                numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
-                }
-                disabled={items.length === 0}
-                inputProps={{
-                'aria-label': 'all items selected',
-                }}
-            />
-            }
-            title={title}
-            subheader={`${numberOfChecked(items)}/${items.length} selected`}
-        />
-        <Divider />
-        <List
-            sx={{
-            width: '100%',
-            height: '320px',
-            bgcolor: '#f0f0f0',
-            overflow: 'auto',
-            }}
-            dense
-            component="div"
-            role="list"
-        >
-            {items.map((value) => {
-            const labelId = `transfer-list-all-item-${value}-label`;
+    const filteredCompatibles = compatiblesVehicles.filter((p) => `
+                    ${p.baseVehicle.automaker.name} 
+                    ${p.baseVehicle.name} 
+                    ${p.model} 
+                    ${p.engine.name} -
+                    ${p.yearStart} a ${p.yearEnd}`.toLowerCase().includes(filterCompatibles.toLowerCase()))
 
-            return (
-                <ListItemButton
-                key={value.id}
-                role="listitem"
-                onClick={handleToggle(value)}
-                >
-                <ListItemIcon>
+    const filteredNonCompatibles = nonCompatiblesVehicles.filter((p) => `
+                    ${p.baseVehicle.automaker.name} 
+                    ${p.baseVehicle.name} 
+                    ${p.model} 
+                    ${p.engine.name} -
+                    ${p.yearStart} a ${p.yearEnd}`.toLowerCase().includes(filterNonCompatibles.toLowerCase()))
+
+    const customList = (title, items, filterValue, setFilterValue) => (
+        <Card>
+            <CardHeader
+                sx={{ px: 2, py: 1 }}
+                avatar={
                     <Checkbox
-                    checked={checked.includes(value)}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{
-                        'aria-labelledby': labelId,
-                    }}
+                        onClick={handleToggleAll(items)}
+                        checked={numberOfChecked(items) === items.length && items.length !== 0}
+                        indeterminate={
+                            numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
+                        }
+                        disabled={items.length === 0}
+                        inputProps={{
+                            'aria-label': 'all items selected',
+                        }}
                     />
-                </ListItemIcon>
-                <ListItemText id={labelId} primary={`
-                    ${value.baseVehicle.name} 
+                }
+                title={
+                    <>
+                        {title} <br />
+                        <input
+                            type='text'
+                            placeholder='Filtrar por...'
+                            value={filterValue}
+                            onChange={(e) => setFilterValue(e.target.value)}
+                            style={{ width: '90%', marginTop: '5px', padding: '4px' }}
+                        />
+                    </>
+                }
+                subheader={`${numberOfChecked(items)}/${items.length} selecionados`}
+            />
+            <Divider />
+            <List
+                sx={{
+                    width: '100%',
+                    height: '320px',
+                    bgcolor: '#f0f0f0',
+                    overflow: 'auto',
+                }}
+                dense
+                component="div"
+                role="list"
+            >
+                {items.map((value) => {
+                    const labelId = `transfer-list-all-item-${value}-label`;
+
+                    return (
+                        <ListItemButton
+                            key={value.id}
+                            role="listitem"
+                            onClick={handleToggle(value)}
+                        >
+                            <ListItemIcon>
+                                <Checkbox
+                                    checked={checked.includes(value)}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    inputProps={{
+                                        'aria-labelledby': labelId,
+                                    }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={`
                     ${value.baseVehicle.automaker.name} 
+                    ${value.baseVehicle.name} 
                     ${value.model} 
-                    ${value.engine.name} 
+                    ${value.engine.name} -
                     ${value.yearStart} a ${value.yearEnd}`} />
-                </ListItemButton>
-            );
-            })}
-        </List>
+                        </ListItemButton>
+                    );
+                })}
+            </List>
         </Card>
     );
 
@@ -224,58 +250,59 @@ export default function TransferListProductVehicle() {
             <div className='fields-section'>
                 <section className='select-entity'>
                     <ReactSelect
-                    options={products.map((p) =>({
-                        value: p.id,
-                        label: `${p.code} - ${p.name} - ${p.manufacture.name}`}))}
-                    value={selectedProduct}
-                    onChange={setSelectedProduct}
-                    placeholder="selecione um produto"
-                    styles={customStyles}
+                        options={products.map((p) => ({
+                            value: p.id,
+                            label: `${p.code} - ${p.name} - ${p.manufacture.name}`
+                        }))}
+                        value={selectedProduct}
+                        onChange={setSelectedProduct}
+                        placeholder="selecione um produto"
+                        styles={customStyles}
                     />
                 </section>
-                { selectedProduct && !isLoadingCompatibility &&
-                <section className='transfer-list'>
-                    <Grid
-                    container
-                    spacing={2}
-                    sx={{ justifyContent: 'center', alignItems: 'center' }}
-                    >
-                    <Grid sx={{ width: '40%' }} >{customList('Não compatíveis', nonCompatiblesVehicles)}</Grid>
-                    <Grid>
-                        <Grid container direction="column" sx={{ alignItems: 'center' }}>
-                        <Button
-                            sx={{ my: 0.5, color: '#CB1E00', backgroundColor: 'white', border: '1px solid #CB1E00' }}
-                            variant="outlined"
-                            size="small"
-                            onClick={handleCheckedCompatiblesVehicles}
-                            disabled={
-                                checked.filter((c) => nonCompatiblesVehicles.some((v) => v.id === c.id)).length === 0
-                                }
-                            aria-label="move selected compatiblesVehicles"
+                {selectedProduct && !isLoadingCompatibility &&
+                    <section className='transfer-list'>
+                        <Grid
+                            container
+                            spacing={2}
+                            sx={{ justifyContent: 'center', alignItems: 'center' }}
                         >
-                            &gt;
-                        </Button>
-                        <Button
-                            sx={{ my: 0.5, color: '#CB1E00', backgroundColor: 'white', border: '1px solid #CB1E00' }}
-                            variant="outlined"
-                            size="small"
-                            onClick={handleCheckedNonCompatiblesVehicles}
-                            disabled={
-                                checked.filter((c) => compatiblesVehicles.some((v) => v.id === c.id)).length === 0
-                                }
-                            aria-label="move selected nonCompatiblesVehicles"
-                        >
-                            &lt;
-                        </Button>
+                            <Grid sx={{ width: '40%' }} >{customList('Não compatíveis', filteredNonCompatibles, filterNonCompatibles, setFilterNonCompatibles)}</Grid>
+                            <Grid>
+                                <Grid container direction="column" sx={{ alignItems: 'center' }}>
+                                    <Button
+                                        sx={{ my: 0.5, color: '#CB1E00', backgroundColor: 'white', border: '1px solid #CB1E00' }}
+                                        variant="outlined"
+                                        size="small"
+                                        onClick={handleCheckedCompatiblesVehicles}
+                                        disabled={
+                                            checked.filter((c) => filteredNonCompatibles.some((v) => v.id === c.id)).length === 0
+                                        }
+                                        aria-label="move selected compatiblesVehicles"
+                                    >
+                                        &gt;
+                                    </Button>
+                                    <Button
+                                        sx={{ my: 0.5, color: '#CB1E00', backgroundColor: 'white', border: '1px solid #CB1E00' }}
+                                        variant="outlined"
+                                        size="small"
+                                        onClick={handleCheckedNonCompatiblesVehicles}
+                                        disabled={
+                                            checked.filter((c) => filteredCompatibles.some((v) => v.id === c.id)).length === 0
+                                        }
+                                        aria-label="move selected nonCompatiblesVehicles"
+                                    >
+                                        &lt;
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <Grid sx={{ width: '40%' }}>{customList('Compatíveis', filteredCompatibles, filterCompatibles, setFilterCompatibles)}</Grid>
                         </Grid>
-                    </Grid>
-                    <Grid sx={{ width: '40%' }}>{customList('Compatíveis', compatiblesVehicles)}</Grid>
-                    </Grid>
-                    <div className='save-button'>
-                        <button onClick={save}>Salvar alterações</button>
-                    </div>
-                </section>
-            }
+                        <div className='save-button'>
+                            <button onClick={save}>Salvar alterações</button>
+                        </div>
+                    </section>
+                }
             </div>
             <Modal message={modalMessage} isVisible={modalVisible} onClose={() => setModalVisible(false)} />
         </main>
