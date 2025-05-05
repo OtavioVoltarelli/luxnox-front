@@ -14,7 +14,7 @@ import CONFIG from "../../config";
     const handleLogin = async (e) => {
     e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8080/auth/login`, {login, password} );
+            const response = await axios.post(`https://api.luxnox.com.br/auth/login`, {login, password} );
             const token = response.data.token;
             localStorage.setItem('token', token) //salva o token no localstorage
             navigate('/')
