@@ -1,8 +1,7 @@
 import './user.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect, use } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useUserData } from '../../hooks/useUserData';
 import { useUserMutate } from '../../hooks/useUserMutate';
@@ -77,7 +76,7 @@ const User = () => {
         //     return setModalMessage("Preencha todos os campos"), setModalVisible(true);
         console.log(user.firmId,)
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/user/${selectedUser.id}`, user)
+            const response = await api.put(`/user/${selectedUser.id}`, user)
 
             setModalMessage("Representante editada com sucesso!");
             setUser(""); // limpa o campo
@@ -91,7 +90,7 @@ const User = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/user/${selectedUser.id}`, {});
+            const response = await api.delete(`/user/${selectedUser.id}`, {});
 
             setModalMessage("Representante excluído com sucesso!");
             setModalVisible(true);

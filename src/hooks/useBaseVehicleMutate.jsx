@@ -1,9 +1,8 @@
-import axios from "axios";
-import CONFIG from "../config";
+import api from "../axiosConfig";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const postData = async (data) => {
-    return axios.post(`${CONFIG.API_URL}/base-vehicle`, data);
+    return api.post(`/base-vehicle`, data);
 }
 
 export function useBaseVehicleMutate() {

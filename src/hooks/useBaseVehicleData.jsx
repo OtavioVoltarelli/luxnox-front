@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import CONFIG from "../config";
+import api from "../axiosConfig";
 
 
 const fetchData = async () => {
-    const response = await axios.get(`${CONFIG.API_URL}/base-vehicle`);
+    const response = await api.get(`/base-vehicle`);
     return response.data;
 }
 

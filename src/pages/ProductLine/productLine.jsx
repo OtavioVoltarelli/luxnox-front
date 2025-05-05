@@ -1,8 +1,7 @@
 import './productLine.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useProductLineData } from '../../hooks/useProductLineData';
 import { useProductLineMutate } from '../../hooks/useProductLineMutate';
@@ -61,7 +60,7 @@ const ProductLine = () => {
             return setModalMessage("Preencha todos os campos"), setModalVisible(true);
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/product-line/${selectedProductLine.id}`, 
+            const response = await api.put(`/product-line/${selectedProductLine.id}`, 
                 {   name: productLine,
                     productGroupId: selectedProductGroup.id
                 });
@@ -78,7 +77,7 @@ const ProductLine = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/product-line/${selectedProductLine.id}`, {});
+            const response = await api.delete(`/product-line/${selectedProductLine.id}`, {});
 
             setModalMessage("Linha excluído com sucesso!");
             setModalVisible(true);

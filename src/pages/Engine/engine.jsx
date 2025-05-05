@@ -1,8 +1,7 @@
 import './engine.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useEngineData } from '../../hooks/useEngineData';
 import { useEngineMutate } from '../../hooks/useEngineMutate';
@@ -54,7 +53,7 @@ const Engine = () => {
         if (!engine.trim()) return setModalMessage("Digite um nome para o motor!");
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/engine/${selectedEngine.id}`, 
+            const response = await api.put(`/engine/${selectedEngine.id}`, 
                 { name: engine });
 
             setModalMessage("Motor editado com sucesso!");
@@ -69,7 +68,7 @@ const Engine = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/engine/${selectedEngine.id}`, {});
+            const response = await api.delete(`/engine/${selectedEngine.id}`, {});
 
             setModalMessage("Motor excluído com sucesso!");
             setModalVisible(true);

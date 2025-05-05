@@ -1,8 +1,7 @@
 import './vehicle.css'
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useVehicleData } from '../../hooks/useVehicleData';
 import { useVehicleMutate } from '../../hooks/useVehicleMutate';
@@ -57,7 +56,7 @@ const Vehicle = () => {
 
     const findVehicleByBaseVehicleId = async () => {
         try {
-            const vehiclesByBaseVehiclesId = await axios.get(`${CONFIG.API_URL}/vehicle/base/${selectedBaseVehicle.id}`)
+            const vehiclesByBaseVehiclesId = await api.get(`/vehicle/base/${selectedBaseVehicle.id}`)
             setVehiclesByBase(vehiclesByBaseVehiclesId.data)
         } catch (error) {
             console.error("Erro:", error);
@@ -115,7 +114,7 @@ const Vehicle = () => {
         }
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/vehicle/${selectedVehicle.id}`, data);
+            const response = await api.put(`/vehicle/${selectedVehicle.id}`, data);
 
             setModalMessage("Veículo editado com sucesso!");
             setVehicle(""); // limpa o campo
@@ -131,7 +130,7 @@ const Vehicle = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/vehicle/${selectedVehicle.id}`, {});
+            const response = await api.delete(`/vehicle/${selectedVehicle.id}`, {});
 
             setModalMessage("Veículo excluído com sucesso!");
             setModalVisible(true);

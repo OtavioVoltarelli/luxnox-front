@@ -1,8 +1,7 @@
 import './firm.css'
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useFirmData } from '../../hooks/useFirmData';
 import { useFirmMutate } from '../../hooks/useFirmMutate';
@@ -77,7 +76,7 @@ const Firm = () => {
         //     return setModalMessage("Preencha todos os campos!");
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/firm/${selectedFirm.id}`, firm);
+            const response = await api.put(`/firm/${selectedFirm.id}`, firm);
 
             setModalMessage("Empresa editado com sucesso!");
             setFirm(""); // limpa o campo
@@ -91,7 +90,7 @@ const Firm = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/firm/${selectedFirm.id}`, {});
+            const response = await api.delete(`/firm/${selectedFirm.id}`, {});
 
             setModalMessage("Empresa excluído com sucesso!");
             setModalVisible(true);

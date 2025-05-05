@@ -12,9 +12,8 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import ReactSelect from "react-select";
 import { useProductData } from '../../hooks/useProductData';
-import axios from 'axios';
-import CONFIG from '../../config';
 import Modal from '../Modal/modal';
+import api from '../../axiosConfig';
 
 function not(a, b) {
     return a.filter((aItem) => !b.some((bItem) => bItem.id === aItem.id));
@@ -54,7 +53,7 @@ export default function TransferListSimilarProducts() {
             const remainingProducts = products.filter((p => p.id !== selectedProduct.value))
 
             try {
-                const response = await axios.get(`${CONFIG.API_URL}/product/${selectedProduct.value}/similar-products`)
+                const response = await api.get(`/product/${selectedProduct.value}/similar-products`)
                 setSimilarProducts(response.data)
                 const nonSimilars = await not(remainingProducts, response.data)
                 setNonSimilarProducts(nonSimilars)
@@ -72,7 +71,7 @@ export default function TransferListSimilarProducts() {
         const idsList = similarProducts.map(v => v.id);
 
         try {
-            await axios.put(`${CONFIG.API_URL}/product/${selectedProduct.value}/similar-products`, {
+            await api.put(`/product/${selectedProduct.value}/similar-products`, {
                 similarProductsIds: idsList
             })
             setModalMessage("Alterações salvas com sucesso!")

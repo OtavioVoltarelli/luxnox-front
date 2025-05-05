@@ -2,23 +2,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import logoescritapng from '../../assets/luxnox-logo-escrita.png'
+import axios from "axios";
+import CONFIG from "../../config";
 
 
     function Login() {
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [login, setLogin] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Simulação de login - Substituir por autenticação real depois
-    if (email === "admin@grauecorte.com" && senha === "123456") {
-        alert("Login realizado com sucesso!");
-        navigate("/"); // Redireciona para a home após login
-    } else {
-        alert("E-mail ou senha incorretos!");
-    }
+        try {
+            const response = await axios.post(`http://localhost:8080/auth/login`, {login, password} );
+            const token = response.data.token;
+            localStorage.setItem('token', token) //salva o token no localstorage
+            navigate('/')
+        } catch (error) {
+            alert('Credenciais inválidas')
+            console.error(error)
+        }
     };
 
     
@@ -33,25 +36,25 @@ import logoescritapng from '../../assets/luxnox-logo-escrita.png'
                 <fieldset>
 
                     <div className="input-group">
-                        <label htmlFor="email"></label>
+                        <label htmlFor="login"></label>
                         <input
-                        type="email"
-                        id="email"
-                        placeholder="E-MAIL"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="login"
+                        id="login"
+                        placeholder="LOGIN"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
                         required
                         />
                     </div>
 
                     <div className="input-group">
-                        <label htmlFor="senha"></label>
+                        <label htmlFor="password"></label>
                         <input
                         type="password"
-                        id="senha"
+                        id="password"
                         placeholder="SENHA"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                         />
                     </div>

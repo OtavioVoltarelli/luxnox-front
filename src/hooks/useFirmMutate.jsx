@@ -1,9 +1,8 @@
-import axios from "axios";
-import CONFIG from "../config";
+import api from "../axiosConfig";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const postData = async (data) => {
-    return axios.post(`${CONFIG.API_URL}/firm`, data);
+    return api.post(`/firm`, data);
 }
 
 export function useFirmMutate() {

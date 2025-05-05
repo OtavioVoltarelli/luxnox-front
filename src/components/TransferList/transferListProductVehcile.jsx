@@ -13,8 +13,7 @@ import Divider from '@mui/material/Divider';
 import ReactSelect from "react-select";
 import { useProductData } from '../../hooks/useProductData';
 import { useVehicleData } from '../../hooks/useVehicleData';
-import axios from 'axios';
-import CONFIG from '../../config';
+import api from '../../axiosConfig';
 import Modal from '../Modal/modal';
 
 function not(a, b) {
@@ -52,7 +51,7 @@ export default function TransferListProductVehicle() {
         const fetchCompatibleVehicles = async () => {
             if (!selectedProduct) return;
             try {
-                const response = await axios.get(`${CONFIG.API_URL}/product/${selectedProduct.value}/vehicles`)
+                const response = await api.get(`/product/${selectedProduct.value}/vehicles`);
                 setCompatiblesVehicles(response.data)
                 const nonCompatibles = not(vehicles, response.data)
                 setNonCompatiblesVehicles(nonCompatibles)
@@ -70,7 +69,7 @@ export default function TransferListProductVehicle() {
         const idsList = compatiblesVehicles.map(v => v.id);
 
         try {
-            await axios.put(`${CONFIG.API_URL}/product/${selectedProduct.value}/vehicles`, {
+            await api.put(`/product/${selectedProduct.value}/vehicles`, {
                 vehiclesIds: idsList
             })
             setModalMessage("Alterações salvas com sucesso!")

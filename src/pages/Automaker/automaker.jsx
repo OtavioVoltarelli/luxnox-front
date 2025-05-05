@@ -1,8 +1,7 @@
 import './automaker.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useAutomakerData } from '../../hooks/useAutomakerData';
 import { useAutomakerMutate } from '../../hooks/useAutomakerMutate';
@@ -54,7 +53,7 @@ const Automaker = () => {
         if (!automaker.trim()) return setModalMessage("Digite um nome para o montadora!");
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/automaker/${selectedAutomaker.id}`, 
+            const response = await api.put(`/automaker/${selectedAutomaker.id}`, 
                 { name: automaker });
 
             setModalMessage("Montadora editado com sucesso!");
@@ -69,7 +68,7 @@ const Automaker = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/automaker/${selectedAutomaker.id}`, {});
+            const response = await api.delete(`/automaker/${selectedAutomaker.id}`, {});
 
             setModalMessage("Montadora excluído com sucesso!");
             setModalVisible(true);

@@ -1,8 +1,7 @@
 import './baseVehicle.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useBaseVehicleData } from '../../hooks/useBaseVehicleData';
 import { useBaseVehicleMutate } from '../../hooks/useBaseVehicleMutate';
@@ -61,7 +60,7 @@ const BaseVehicle = () => {
             return setModalMessage("Preencha todos os campos"), setModalVisible(true);
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/base-vehicle/${selectedBaseVehicle.id}`, 
+            const response = await api.put(`/base-vehicle/${selectedBaseVehicle.id}`, 
                 {   name: baseVehicle,
                     automakerId: selectedAutomaker.id
                 });
@@ -78,7 +77,7 @@ const BaseVehicle = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/base-vehicle/${selectedBaseVehicle.id}`, {});
+            const response = await api.delete(`/base-vehicle/${selectedBaseVehicle.id}`, {});
 
             setModalMessage("Base de Veículo excluída com sucesso!");
             setModalVisible(true);

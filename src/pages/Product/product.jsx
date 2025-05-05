@@ -1,8 +1,7 @@
 import './product.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useProductData } from '../../hooks/useProductData';
 import { useProductMutate } from '../../hooks/useProductMutate';
@@ -71,7 +70,7 @@ const Product = () => {
             return setModalMessage("Preencha todos os campos!"), setModalVisible(true);
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/product/${selectedProduct.id}`, 
+            const response = await api.put(`/product/${selectedProduct.id}`, 
                 {   
                     code: productCode,
                     name: productName,
@@ -92,7 +91,7 @@ const Product = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/product/${selectedProduct.id}`, {});
+            const response = await api.delete(`/product/${selectedProduct.id}`, {});
 
             setModalMessage("Produto excluído com sucesso!");
             setModalVisible(true);

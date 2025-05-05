@@ -1,8 +1,7 @@
 import './productGroup.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useProductGroupData } from '../../hooks/useProductGroupsData';
 import { useProductGroupMutate } from '../../hooks/useProductGroupMutate';
@@ -54,7 +53,7 @@ const ProductGroup = () => {
         if (!productGroup.trim()) return setModalMessage("Digite um nome para o grupo!");
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/product-group/${selectedProductGroup.id}`, 
+            const response = await api.put(`/product-group/${selectedProductGroup.id}`, 
                 { name: productGroup });
 
             setModalMessage("Grupo editado com sucesso!");
@@ -69,7 +68,7 @@ const ProductGroup = () => {
 
     const del = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/product-group/${selectedProductGroup.id}`, {});
+            const response = await api.delete(`/product-group/${selectedProductGroup.id}`, {});
 
             setModalMessage("Grupo excluído com sucesso!");
             setModalVisible(true);

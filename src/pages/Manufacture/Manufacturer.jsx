@@ -1,8 +1,7 @@
 import './Manufacturer.css';
-import axios from 'axios';
+import api from '../../axiosConfig';
 import { useState, useEffect } from "react";
 import Select from 'react-select'
-import CONFIG from "../../config";
 import Modal from "../../components/Modal/modal";
 import { useManufacturerData } from '../../hooks/useManufacturerData';
 import { useManufacturerMutate } from '../../hooks/useManufacturerMutate';
@@ -54,7 +53,7 @@ const Manufacturer = () => {
         if (!manufacturer.trim()) return setModalMessage("Digite um nome para a fabricante!");
 
         try {
-            const response = await axios.put(`${CONFIG.API_URL}/manufacture/${selectedManufacturer.id}`, 
+            const response = await api.put(`/manufacture/${selectedManufacturer.id}`, 
                 { name: manufacturer });
 
             setModalMessage("Fabricante editado com sucesso!");
@@ -69,7 +68,7 @@ const Manufacturer = () => {
 
     const deleteGroup = async () => {
         try {
-            const response = await axios.delete(`${CONFIG.API_URL}/manufacture/${selectedManufacturer.id}`, {});
+            const response = await api.delete(`/manufacture/${selectedManufacturer.id}`, {});
 
             setModalMessage("Fabricante excluído com sucesso!");
             setModalVisible(true);

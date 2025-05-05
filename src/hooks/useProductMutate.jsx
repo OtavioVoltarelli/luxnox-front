@@ -1,9 +1,8 @@
-import axios from "axios";
-import CONFIG from "../config";
+import api from "../axiosConfig";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const postData = async (data) => {
-    return axios.post(`${CONFIG.API_URL}/product`, data);
+    return api.post(`/product`, data);
 }
 
 export function useProductMutate() {
