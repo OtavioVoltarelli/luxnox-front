@@ -60,6 +60,26 @@ ul > li.menu-item > a > .txt {
 margin-left: 30px;
 }
 
+ul > #logout-button {
+    background-color: var(--cinza);
+    color: red;
+    width: 100%;
+    padding: 20px;
+    border-radius: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+    }
+
+ul > #logout-button:hover {
+    background-color: white;
+    box-shadow: none;
+    }
+
+ul > #logout-button > .icon {
+    display: flex;
+    }
 
 .arrow {
     transition: transform 0.3s;

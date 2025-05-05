@@ -1,6 +1,7 @@
 import './navbar.css';
 import { useState } from "react";
-import { Menu, LayoutDashboard, Handshake, Package, Car, Cog, ChevronDown } from "lucide-react";
+import { Menu, LayoutDashboard, Handshake, Package, Car, Cog, ChevronDown, LogOut } from "lucide-react";
+import HandleLogout from '../../logout';
 
 const Navbar = ({ setMenuWidth }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -86,6 +87,12 @@ const Navbar = ({ setMenuWidth }) => {
                         <li><a href="/associacao/produtos-veiculos">Produtos / Veículos</a></li>
                     </ul>
                 </li>
+                    
+                <button id='logout-button' onClick={HandleLogout}>
+                    <span className='icon'><LogOut color='red' size={28} /></span>
+                    <span id='logout' >Sair</span>
+                </button>
+                    
             </ul>
         </nav>
     );
